@@ -62,7 +62,6 @@
 </form>
 
 <div id="message"></div>
-
 <script>
   const form = document.getElementById('loginForm');
   const messageDiv = document.getElementById('message');
@@ -74,6 +73,7 @@
     const password = form.password.value.trim();
 
     messageDiv.textContent = ''; // oldingi xabarlarni tozalaymiz
+    messageDiv.className = '';
 
     if (!username || !password) {
       messageDiv.textContent = 'Iltimos, barcha maydonlarni to\'ldiring.';
@@ -92,14 +92,18 @@
 
       if (response.ok) {
         const data = await response.json();
+
         // Tokenni localStorage ga saqlaymiz
         localStorage.setItem('token', data.token);
 
-        messageDiv.textContent = 'Muvaffaqiyatli kirildi!';
+        messageDiv.textContent = 'Muvaffaqiyatli kirildi! Siz admin panelga yo\'naltirilasiz...';
         messageDiv.className = 'success';
 
-        // Misol uchun, boshqa sahifaga yo'naltirish:
-        // window.location.href = '/dashboard.html';
+        // 1 soniya kutib /admin sahifasiga yo'naltiramiz
+        setTimeout(() => {
+          window.location.href = '/admin/';
+        }, 1000);
+
       } else if (response.status === 401) {
         messageDiv.textContent = 'Login yoki parol noto\'g\'ri.';
         messageDiv.className = 'error';
@@ -114,6 +118,7 @@
     }
   });
 </script>
+
 
 </body>
 </html>
