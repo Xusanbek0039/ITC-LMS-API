@@ -6,7 +6,7 @@ from django.contrib import admin
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Your API",
+      title="IT Creative API",
       default_version='v1',
       description="API description",
    ),
