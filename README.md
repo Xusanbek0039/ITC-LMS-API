@@ -35,7 +35,7 @@
 
 ```bash
 # 1. Loyihani yuklab oling
-git clone https://github.com/username/ITC-LMS-API.git
+git clone https://github.com/xusanbek0039/ITC-LMS-API.git
 cd ITC-LMS-API
 
 # 2. Virtual muhit yaratish
