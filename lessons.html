@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Darslar ro‘yxati</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .lesson-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .lesson-card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lesson-video iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+    }
+
+    .lesson-body {
+      padding: 15px;
+    }
+
+    .lesson-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .lesson-guide {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .lesson-meta {
+      font-size: 12px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎓 Darslar Ro‘yxati</h2>
+
+  <div class="lesson-container" id="lessonContainer">
+    <!-- Darslar bu yerga qo‘shiladi -->
+  </div>
+
+  <script>
+    fetch("http://127.0.0.1:8000/lessons/")
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("lessonContainer");
+
+        data.forEach(lesson => {
+          const card = document.createElement("div");
+          card.className = "lesson-card";
+
+          // YouTube video ID olish
+          const youtubeId = lesson.youtube_url.split("v=")[1]?.split("&")[0];
+
+          card.innerHTML = `
+            <div class="lesson-video">
+              <iframe src="https://www.youtube.com/embed/${youtubeId}" allowfullscreen></iframe>
+            </div>
+            <div class="lesson-body">
+              <div class="lesson-title">${lesson.order}. ${lesson.title}</div>
+              <div class="lesson-guide">${lesson.guide}</div>
+              <div class="lesson-meta">
+                Kurs ID: ${lesson.course} | Sana: ${new Date(lesson.created_at).toLocaleDateString()}
+              </div>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      })
+      .catch(error => {
+        console.error("Xatolik:", error);
+        alert("Darslar yuklanmadi");
+      });
+  </script>
+
+</body>
+</html>

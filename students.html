@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Talabalar ro‘yxati</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📋 Talabalar ro‘yxati</h2>
+
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>TR</th>
+        <th>Ism familiya</th>
+        <th>Yo‘nalish</th>
+        <th>Email</th>
+        <th>Telefon</th>
+        <th>Ruxsat</th>
+        <th>So‘nggi faollik</th>
+        <th>Qo‘shimcha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- JavaScript orqali to‘ldiriladi -->
+    </tbody>
+  </table>
+
+  <script>
+    fetch("http://127.0.0.1:8000/students/")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("API dan ma'lumot olinmadi");
+        }
+        return response.json();
+      })
+      .then(data => {
+        const tbody = document.querySelector("#studentTable tbody");
+        data.forEach(student => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${student.id}</td>
+            <td>${student.tr}</td>
+            <td>${student.ism_familiya}</td>
+            <td>${student.yonalish}</td>
+            <td>${student.email}</td>
+            <td>${student.telefon}</td>
+            <td>${student.ruxsat ? "✅" : "❌"}</td>
+            <td>${student.songi_faollik ? new Date(student.songi_faollik).toLocaleString() : "-"}</td>
+            <td>${student.qoshimcha || "-"}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => {
+        console.error("Xatolik:", error);
+        alert("Xatolik yuz berdi. Talabalar ro‘yxati olinmadi.");
+      });
+  </script>
+
+</body>
+</html>

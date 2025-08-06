@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Kurslar ro‘yxati</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .course-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .course-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .course-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background-color: #eee;
+    }
+
+    .course-body {
+      padding: 15px;
+      flex: 1;
+    }
+
+    .course-title {
+      font-size: 20px;
+      margin: 0 0 10px;
+      color: #333;
+    }
+
+    .course-description {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .course-footer {
+      padding: 10px 15px;
+      font-size: 13px;
+      color: #999;
+      border-top: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📚 Kurslar ro‘yxati</h2>
+
+  <div class="course-container" id="courseContainer">
+    <!-- JavaScript bu yerga kurs kartalarini qo‘shadi -->
+  </div>
+
+  <script>
+    fetch("http://127.0.0.1:8000/courses/")
+      .then(response => {
+        if (!response.ok) throw new Error("Kurslar olinmadi");
+        return response.json();
+      })
+      .then(data => {
+        const container = document.getElementById("courseContainer");
+
+        data.forEach(course => {
+          const card = document.createElement("div");
+          card.className = "course-card";
+
+          card.innerHTML = `
+            <img src="${course.image || 'https://via.placeholder.com/300x180?text=No+Image'}" alt="${course.name}" class="course-image">
+            <div class="course-body">
+              <h3 class="course-title">${course.name}</h3>
+              <p class="course-description">${course.description}</p>
+            </div>
+            <div class="course-footer">
+              Yaratilgan: ${new Date(course.created_at).toLocaleDateString()}
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      })
+      .catch(error => {
+        console.error("Xatolik:", error);
+        alert("Xatolik yuz berdi. Kurslar yuklanmadi.");
+      });
+  </script>
+
+</body>
+</html>
