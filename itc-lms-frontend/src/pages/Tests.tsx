@@ -18,7 +18,7 @@ import {
   DialogActions
 } from '@mui/material';
 import { Search, Quiz, Edit, Delete, PlayArrow, Timer } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../api';
 
 interface SimpleTest {
   id: number;
@@ -54,8 +54,8 @@ const Tests: React.FC = () => {
   const fetchTests = async () => {
     try {
       const [simpleRes, oralRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/simple-tests/'),
-        axios.get('http://localhost:8000/api/oral-tests/')
+        api.get('/simple-tests/'),
+        api.get('/oral-tests/')
       ]);
 
       setSimpleTests(simpleRes.data.results || simpleRes.data);

@@ -6,7 +6,9 @@ import {
   Typography,
   Box,
   Paper,
-  CircularProgress
+  CircularProgress,
+  alpha,
+  useTheme,
 } from '@mui/material';
 import {
   Book,
@@ -14,9 +16,9 @@ import {
   Quiz,
   School,
   People,
-  TrendingUp
+  TrendingUp,
 } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../api';
 
 interface DashboardStats {
   totalCourses: number;
@@ -37,18 +39,20 @@ const Dashboard: React.FC = () => {
     totalTeachers: 0,
   });
   const [loading, setLoading] = useState(true);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [coursesRes, lessonsRes, testsRes, certificatesRes, studentsRes, teachersRes] = await Promise.all([
-          axios.get('http://localhost:8000/api/courses/'),
-          axios.get('http://localhost:8000/api/lessons/'),
-          axios.get('http://localhost:8000/api/simple-tests/'),
-          axios.get('http://localhost:8000/api/certificates/'),
-          axios.get('http://localhost:8000/api/students/'),
-          axios.get('http://localhost:8000/api/teachers/'),
-        ]);
+        const [coursesRes, lessonsRes, testsRes, certificatesRes, studentsRes, teachersRes] =
+          await Promise.all([
+            api.get('/courses/'),
+            api.get('/lessons/'),
+            api.get('/simple-tests/'),
+            api.get('/certificates/'),
+            api.get('/students/'),
+            api.get('/teachers/'),
+          ]);
 
         setStats({
           totalCourses: coursesRes.data.count || coursesRes.data.length,
@@ -72,38 +76,44 @@ const Dashboard: React.FC = () => {
     {
       title: 'Kurslar',
       value: stats.totalCourses,
-      icon: <Book sx={{ fontSize: 40 }} />,
+      icon: <Book sx={{ fontSize: 32 }} />,
       color: '#1976d2',
+      gradient: 'linear-gradient(135deg, #1976d2, #42a5f5)',
     },
     {
       title: 'Darslar',
       value: stats.totalLessons,
-      icon: <VideoLibrary sx={{ fontSize: 40 }} />,
+      icon: <VideoLibrary sx={{ fontSize: 32 }} />,
       color: '#388e3c',
+      gradient: 'linear-gradient(135deg, #388e3c, #66bb6a)',
     },
     {
       title: 'Testlar',
       value: stats.totalTests,
-      icon: <Quiz sx={{ fontSize: 40 }} />,
+      icon: <Quiz sx={{ fontSize: 32 }} />,
       color: '#f57c00',
+      gradient: 'linear-gradient(135deg, #f57c00, #ffb74d)',
     },
     {
       title: 'Sertifikatlar',
       value: stats.totalCertificates,
-      icon: <School sx={{ fontSize: 40 }} />,
+      icon: <School sx={{ fontSize: 32 }} />,
       color: '#7b1fa2',
+      gradient: 'linear-gradient(135deg, #7b1fa2, #ba68c8)',
     },
     {
       title: 'Talabalar',
       value: stats.totalStudents,
-      icon: <People sx={{ fontSize: 40 }} />,
+      icon: <People sx={{ fontSize: 32 }} />,
       color: '#d32f2f',
+      gradient: 'linear-gradient(135deg, #d32f2f, #ef5350)',
     },
     {
-      title: 'O\'qituvchilar',
+      title: "O'qituvchilar",
       value: stats.totalTeachers,
-      icon: <TrendingUp sx={{ fontSize: 40 }} />,
+      icon: <TrendingUp sx={{ fontSize: 32 }} />,
       color: '#0288d1',
+      gradient: 'linear-gradient(135deg, #0288d1, #29b6f6)',
     },
   ];
 
@@ -117,12 +127,14 @@ const Dashboard: React.FC = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
-        Dashboard
-      </Typography>
-      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        IT Creative LMS tizimining umumiy statistikasi
-      </Typography>
+      <Box mb={4}>
+        <Typography variant="h4" fontWeight={700} gutterBottom>
+          Dashboard
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary">
+          IT Creative LMS tizimining umumiy statistikasi
+        </Typography>
+      </Box>
 
       <Grid container spacing={3}>
         {statCards.map((card, index) => (
@@ -132,31 +144,41 @@ const Dashboard: React.FC = () => {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                transition: 'transform 0.2s',
+                transition: 'all 0.3s ease',
+                overflow: 'visible',
                 '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 4,
+                  transform: 'translateY(-6px)',
+                  boxShadow: `0 12px 40px ${alpha(card.color, 0.3)}`,
                 },
               }}
             >
-              <CardContent>
+              <CardContent sx={{ p: 3 }}>
                 <Box display="flex" alignItems="center" mb={2}>
                   <Box
                     sx={{
-                      backgroundColor: card.color,
+                      background: card.gradient,
                       color: 'white',
-                      borderRadius: 2,
-                      p: 1,
+                      borderRadius: 3,
+                      p: 1.5,
                       mr: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: `0 4px 14px ${alpha(card.color, 0.4)}`,
                     }}
                   >
                     {card.icon}
                   </Box>
                   <Box flex={1}>
-                    <Typography variant="h4" component="div">
+                    <Typography variant="h3" fontWeight={800} lineHeight={1}>
                       {card.value}
                     </Typography>
-                    <Typography variant="h6" color="text.secondary">
+                    <Typography
+                      variant="body1"
+                      color="text.secondary"
+                      fontWeight={500}
+                      sx={{ mt: 0.5 }}
+                    >
                       {card.title}
                     </Typography>
                   </Box>
@@ -167,14 +189,30 @@ const Dashboard: React.FC = () => {
         ))}
       </Grid>
 
-      <Paper sx={{ mt: 4, p: 3 }}>
-        <Typography variant="h6" gutterBottom>
-          Tizim haqida
+      <Paper
+        sx={{
+          mt: 4,
+          p: 4,
+          borderRadius: 4,
+          background:
+            theme.palette.mode === 'dark'
+              ? 'linear-gradient(135deg, rgba(25,118,210,0.1), rgba(118,75,162,0.1))'
+              : 'linear-gradient(135deg, rgba(25,118,210,0.05), rgba(118,75,162,0.05))',
+          border: `1px solid ${
+            theme.palette.mode === 'dark'
+              ? 'rgba(255,255,255,0.08)'
+              : 'rgba(0,0,0,0.06)'
+          }`,
+        }}
+      >
+        <Typography variant="h6" fontWeight={700} gutterBottom>
+          🎓 Tizim haqida
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          IT Creative Learning Management System (LMS) - bu zamonaviy ta'lim boshqaruv tizimi.
+        <Typography variant="body1" color="text.secondary" lineHeight={1.8}>
+          IT Creative Learning Management System (LMS) — bu zamonaviy ta'lim boshqaruv tizimi.
           Ushbu platforma orqali o'qituvchilar va talabalar o'rtasidagi o'qitish jarayonini to'liq
-          avtomatlashtirish mumkin.
+          avtomatlashtirish mumkin. Kurslar, darslar, testlar va sertifikatlarni boshqarish uchun
+          qulay interfeys taqdim etadi.
         </Typography>
       </Paper>
     </Box>

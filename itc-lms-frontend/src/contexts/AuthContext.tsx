@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -33,24 +33,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (storedToken) {
       setToken(storedToken);
       setIsAuthenticated(true);
-      axios.defaults.headers.common['Authorization'] = `Token ${storedToken}`;
     }
     setLoading(false);
   }, []);
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
-        username,
-        password
-      });
-
+      const response = await api.post('/login/', { username, password });
       if (response.data.token) {
         const authToken = response.data.token;
         setToken(authToken);
         setIsAuthenticated(true);
         localStorage.setItem('token', authToken);
-        axios.defaults.headers.common['Authorization'] = `Token ${authToken}`;
         return true;
       }
       return false;
@@ -64,7 +58,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setToken(null);
     setIsAuthenticated(false);
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
   };
 
   const value: AuthContextType = {

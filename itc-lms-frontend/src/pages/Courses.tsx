@@ -13,7 +13,7 @@ import {
   Chip
 } from '@mui/material';
 import { Search, Add, Edit, Delete } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../api';
 
 interface Course {
   id: number;
@@ -34,7 +34,7 @@ const Courses: React.FC = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/courses/');
+      const response = await api.get('/courses/');
       setCourses(response.data.results || response.data);
     } catch (error) {
       console.error('Kurslarni olishda xatolik:', error);

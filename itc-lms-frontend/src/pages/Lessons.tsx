@@ -16,7 +16,7 @@ import {
   DialogActions
 } from '@mui/material';
 import { Search, PlayArrow, YouTube, Edit, Delete } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../api';
 
 interface Lesson {
   id: number;
@@ -42,14 +42,14 @@ const Lessons: React.FC = () => {
 
   const fetchLessons = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/lessons/');
+      const response = await api.get('/lessons/');
       const lessonsData = response.data.results || response.data;
       
       // Kurs nomlarini olish uchun qo'shimcha so'rov
       const lessonsWithCourseNames = await Promise.all(
         lessonsData.map(async (lesson: Lesson) => {
           try {
-            const courseResponse = await axios.get(`http://localhost:8000/api/courses/${lesson.course}/`);
+            const courseResponse = await api.get(`/courses/${lesson.course}/`);
             return { ...lesson, course_name: courseResponse.data.name };
           } catch {
             return { ...lesson, course_name: 'Noma\'lum kurs' };
