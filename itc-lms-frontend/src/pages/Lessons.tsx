@@ -209,9 +209,7 @@ const Lessons: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<YouTube />}
-            href={selectedLesson?.youtube_url}
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={() => selectedLesson && window.open(selectedLesson.youtube_url, '_blank')}
           >
             YouTube'da ko'rish
           </Button>
