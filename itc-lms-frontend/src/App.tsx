@@ -11,7 +11,11 @@ import Certificates from './pages/Certificates';
 import { useAuth } from './contexts/AuthContext';
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return <Login />;

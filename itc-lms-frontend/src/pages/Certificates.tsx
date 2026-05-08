@@ -17,7 +17,7 @@ import {
   Avatar
 } from '@mui/material';
 import { Search, School, Download, Edit, Delete, Person } from '@mui/icons-material';
-import axios from 'axios';
+import api from '../api';
 
 interface Certificate {
   id: number;
@@ -40,7 +40,7 @@ const Certificates: React.FC = () => {
 
   const fetchCertificates = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/certificates/');
+      const response = await api.get('/certificates/');
       setCertificates(response.data.results || response.data);
     } catch (error) {
       console.error('Sertifikatlarni olishda xatolik:', error);
@@ -67,7 +67,7 @@ const Certificates: React.FC = () => {
 
   const handleReset = async (certificateId: number) => {
     try {
-      await axios.post(`http://localhost:8000/api/certificates/${certificateId}/reset/`);
+      await api.post(`/certificates/${certificateId}/reset/`);
       fetchCertificates(); // Qayta yuklash
     } catch (error) {
       console.error('Sertifikatni qayta berishda xatolik:', error);

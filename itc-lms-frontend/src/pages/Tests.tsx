@@ -288,21 +288,21 @@ const Tests: React.FC = () => {
           <Typography variant="body1" paragraph>
             {selectedTest?.description}
           </Typography>
-          {'duration' in selectedTest && (
+          {selectedTest && 'duration' in selectedTest && (
             <Typography variant="body2" color="text.secondary">
               Davomiyligi: {selectedTest.duration} daqiqa
             </Typography>
           )}
-          {'pass_score' in selectedTest && (
+          {selectedTest && 'pass_score' in selectedTest && (
             <>
               <Typography variant="body2" color="text.secondary">
-                O'tish balli: {selectedTest.pass_score}%
+                O'tish balli: {(selectedTest as any).pass_score}%
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Savollar soni: {selectedTest.question_count}
+                Savollar soni: {(selectedTest as any).question_count}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Qiyinlik darajasi: {selectedTest.difficulty}
+                Qiyinlik darajasi: {(selectedTest as any).difficulty}
               </Typography>
             </>
           )}
